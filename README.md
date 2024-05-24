@@ -4,6 +4,7 @@ Restricted and Unrestriced Hartree Fock Driver Including the DIIS Algorithm
 Test calculation of UHF H2 molecule provide this output textfile:
 
 
+
                       ======================================
                                HARTREE-FOCK PROGRAM
                       ======================================
@@ -21,7 +22,7 @@ Test calculation of UHF H2 molecule provide this output textfile:
 
 
  ----------------------------------------------------------------------------
- -   Iter  |      Energy      |    [F,P]    |    |Error|    |   Conv. Acc.  -
+ |  Iter  |         Energy         |       [F,P]      |       |Error|       |      Conv. Acc.      |
  ----------------------------------------------------------------------------
       1        -1.00090511      8.164E-01      1.335E-01
       2        -1.02142176      1.382E-02      2.451E-03          DIIS
@@ -72,3 +73,4 @@ Test calculation of UHF H2 molecule provide this output textfile:
                        18   0.0000        1.65554
 
                       *** Terminating Normally ***
+
