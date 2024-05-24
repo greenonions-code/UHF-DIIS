@@ -1,25 +1,25 @@
 module plain_hartree_fock
 
-		  !-------------------------------------------------------------------------------------------------------------------------------------------------------
-			! This module contains an in-core Hartree-Fock implementation using the talsh 
-			! library to provide the one and two electron integrals. 
-			!
-			! This file was part of a branch of the DIRAC relativistic computational software 
-			! program to practise and understand unrestricted Hartree-Fock in combination 
-			! with Fortran software development wihtin a team environment using GitLab.
-			! As result of solving relativistic computational problems, tensors contained
-			! complex parts, therefore sometime requiring a slightly different approach.
-			!
-			!
-			!
-			!------------------------------------------------------------------------------
-			! Author: Melle de Groot, Master Student Chemistry, track Molecular Sciences.
-			! Course: Scientific Software Development with Fortran / VU University.
-			!------------------------------------------------------------------------------
-			!------------------------------------------------------------------------------
-			! Starting date of the project: March 1st 2019
-			! End date of the project: 			May   1st 2019
-      !------------------------------------------------------------------------------
+!-------------------------------------------------------------------------------------------------------------------------------------------------------
+! This module contains an in-core Hartree-Fock implementation using the talsh 
+! library to provide the one and two electron integrals. 
+!
+! This file was part of a branch of the DIRAC relativistic computational software 
+! program to practise and understand unrestricted Hartree-Fock in combination 
+! with Fortran software development wihtin a team environment using GitLab.
+! As result of solving relativistic computational problems, tensors contained
+! complex parts, therefore sometime requiring a slightly different approach.
+!
+!
+!
+!------------------------------------------------------------------------------
+! Author: Melle de Groot, Master Student Chemistry, track Molecular Sciences.
+! Course: Scientific Software Development with Fortran / VU University.
+!------------------------------------------------------------------------------
+!------------------------------------------------------------------------------
+! Starting date of the project: March 1st 2019
+! End date of the project: 	May   1st 2019
+!------------------------------------------------------------------------------
 
        use exacorr_datatypes
 
@@ -31,26 +31,26 @@ module plain_hartree_fock
         contains
         !-----------------------------------------------------------------------------------------------------------------------------------------------------
         subroutine hartree_fock_driver(oneint,twoint)
-				! This Hartree Fock driver constructs the HF wavefunction based upon user input
-				! by calculation of the Fock and Density matrices until a self-consitent field is
-				! achieved. Upon request during input of a DIIS accelerated algorithm, provided 
-				! with a maximum size of the DIIS spacem during the SCF iterations, an 
-				! extrapolated list of weighted Fock matrices is contstructed to speed up convergence.
-				! The one- and two body tensors are already provided by the program. The user has to 
-				! specify the amount of electrons, their cartesian coordinates, the maximum number of 
-				! SCF iterators and the type of HF calculation: restricted or unrestricted. 
-			  ! All results will be logged to an output file which provides information with 
-			  ! respect to the type of calculation and whether the thresholds are met within set 
-			  ! boundaries. 
+			! This Hartree Fock driver constructs the HF wavefunction based upon user input
+			! by calculation of the Fock and Density matrices until a self-consitent field is
+			! achieved. Upon request during input of a DIIS accelerated algorithm, provided 
+			! with a maximum size of the DIIS spacem during the SCF iterations, an 
+			! extrapolated list of weighted Fock matrices is contstructed to speed up convergence.
+			! The one- and two body tensors are already provided by the program. The user has to 
+			! specify the amount of electrons, their cartesian coordinates, the maximum number of 
+			! SCF iterators and the type of HF calculation: restricted or unrestricted. 
+		 	! All results will be logged to an output file which provides information with 
+			! respect to the type of calculation and whether the thresholds are met within set 
+			! boundaries. 
 			  
-			  ! The program starts by allocating space for serveral tensors and will additionally
-			  ! call the user input reader, followed by a check of input and logging of results.
-			  ! Then when everything is in order, the SCF loop is started and altered by the fact
-			  ! whether the DIIS algorithm has been requested in the input file. 
-			  ! At the end all memory is deallocated and the used is provided with a formatted 
-			  ! output textfile. The example on GitHub presents an unrestricted calculation of H2
-			  ! with the DIIS algorithm being used. The one and two body parts have been provided 
-			  ! by another part of the DIRAC program. 
+			! The program starts by allocating space for serveral tensors and will additionally
+			! call the user input reader, followed by a check of input and logging of results.
+			! Then when everything is in order, the SCF loop is started and altered by the fact
+			! whether the DIIS algorithm has been requested in the input file. 
+			! At the end all memory is deallocated and the used is provided with a formatted 
+			! output textfile. The example on GitHub presents an unrestricted calculation of H2
+			! with the DIIS algorithm being used. The one and two body parts have been provided 
+			! by another part of the DIRAC program. 
         
          implicit none
 					
@@ -167,7 +167,7 @@ module plain_hartree_fock
         end subroutine hartree_fock_driver
         
         
- 				!-----------------------------------------------------------------------------------------------------------------------------------------------------
+ 	!-----------------------------------------------------------------------------------------------------------------------------------------------------
  				
         subroutine logger (scf_stepnumber,hf_energy, vector_norm, converged, HF_TYPE, N_ELECTRONS, &
                            MAX_ITER, SCF_TRESHOLD, DIIS, MAX_DIIS, one_el_energy, two_el_energy,V_NN, &
@@ -311,21 +311,21 @@ module plain_hartree_fock
         ! integrals as input. As output it provides the Fock matrix (F), the one- and two electron energy.
         
         ! Input
-        integer, intent(in) 																									  		:: N_spinor, N_elec   ! Number of spinors
-        complex(8), dimension (N_spinor, N_spinor), intent(in) 							  			:: P_total, h_matrix  ! Density matrix and one-body part
-        complex(8), dimension (N_spinor, N_spinor, N_spinor, N_spinor), intent(in) 	:: G_tensor   				! two-body, fourth order tensor (G)
+        integer, intent(in) 								:: N_spinor, N_elec   ! Number of spinors
+        complex(8), dimension (N_spinor, N_spinor), intent(in) 				:: P_total, h_matrix  ! Density matrix and one-body part
+        complex(8), dimension (N_spinor, N_spinor, N_spinor, N_spinor), intent(in) 	:: G_tensor   	      ! two-body, fourth order tensor (G)
 
         ! Intermediate variables
         integer :: i, j, k, l
-        complex(8), dimension (N_spinor, N_spinor) 																	:: G_matrix  			 			 ! Contracted G-tensor with Density Matrix (P)
-        complex(8), PARAMETER 										 																	:: ZERO = (0.D0, 0.D0)   ! Parameter for ZERO
+        complex(8), dimension (N_spinor, N_spinor) 					:: G_matrix  	       ! Contracted G-tensor with Density Matrix (P)
+        complex(8), PARAMETER 							        :: ZERO = (0.D0, 0.D0)   ! Parameter for ZERO
 
         ! Output
-        complex(8), dimension (N_spinor, N_spinor), intent(out) 										:: F_matrix    	  ! Fock matrix
-        real(8), intent(out) 																												:: one_e_energy   ! One electron energy
-        real(8), intent(out)																												:: two_e_energy   ! Two electron energy
+        complex(8), dimension (N_spinor, N_spinor), intent(out) 			:: F_matrix    	       ! Fock matrix
+        real(8), intent(out) 							        :: one_e_energy   ! One electron energy
+        real(8), intent(out)						                :: two_e_energy   ! Two electron energy
 
-				! Nullify G_matrix
+        ! Nullify G_matrix
         G_matrix = ZERO
 
         ! Contraction of the G-tensor with the total density matrix (P) in column-major order.
@@ -381,29 +381,28 @@ module plain_hartree_fock
         end subroutine construct_fock_rhf
 
         !----------------------------------------------------------------------------------------------------------------------------------------------------
-        subroutine construct_fock_uhf (N_elec, N_spinor, P_total, h_matrix, G_tensor, F_matrix &
-                   , one_e_energy, two_e_energy)
+        subroutine construct_fock_uhf (N_elec, N_spinor, P_total, h_matrix, G_tensor, F_matrix , one_e_energy, two_e_energy)
        
         ! This subroutine constructs the Fock matrix when an unrestricted calculation is requested, taking the number
         ! of electrons, the number of molecular spinors, the total density matrix, the one-body part and two electron
         ! integrals as input. As output it provides the Fock matrix, the one electron energy and two electron energy. 
        
         ! Input
-        integer, intent(in) 																												:: N_spinor, N_elec   ! Number of spinors and electrons
-        complex(8), dimension (N_spinor, N_spinor), intent(in) 											:: P_total, h_matrix	! Density matrix and one-body
-        complex(8), dimension (N_spinor ,N_spinor, N_spinor, N_spinor), intent(in) 	:: G_tensor   				! two-body, fourth order tensor (G)
+        integer, intent(in) 								:: N_spinor, N_elec   ! Number of spinors and electrons
+        complex(8), dimension (N_spinor, N_spinor), intent(in) 				:: P_total, h_matrix  ! Density matrix and one-body
+        complex(8), dimension (N_spinor ,N_spinor, N_spinor, N_spinor), intent(in) 	:: G_tensor   	      ! two-body, fourth order tensor (G)
 
         ! Intermediate variables
         integer :: i, j, k, l 
-        complex(8), dimension (N_spinor, N_spinor) 																	:: G_matrix  								! Contracted G-tensor with density matrix (P)
-        complex(8), PARAMETER 																											:: ZERO = (0.D0, 0.D0)      ! Parameter ZERO
+        complex(8), dimension (N_spinor, N_spinor) 			                :: G_matrix  	            ! Contracted G-tensor with density matrix (P)
+        complex(8), PARAMETER 							        :: ZERO = (0.D0, 0.D0)      ! Parameter ZERO
       
         ! Output  
-        complex(8), dimension (N_spinor, N_spinor), intent(out) 										:: F_matrix     ! Fock matrix (F)
-        real(8), intent(out) 																												:: one_e_energy ! One electron energy
-        real(8), intent(out) 																												:: two_e_energy ! Two electron energy  
+        complex(8), dimension (N_spinor, N_spinor), intent(out) 	                :: F_matrix     ! Fock matrix (F)
+        real(8), intent(out) 								:: one_e_energy ! One electron energy
+        real(8), intent(out) 						                :: two_e_energy ! Two electron energy  
 
-				! Nullify G_matrix
+        ! Nullify G_matrix
         G_matrix = ZERO
         
         ! Contraction of the 4rh order G-tensor with the total density matrix (P) in column-major order.
@@ -431,7 +430,7 @@ module plain_hartree_fock
         ! Nullify one electron energy
         one_e_energy = ZERO
 
-				! Calculate one electron energy in column major order.
+	! Calculate one electron energy in column major order.
         do j = 1, N_elec
            
            do i = 1, N_elec
@@ -445,7 +444,7 @@ module plain_hartree_fock
         ! Nullift two electron energy 
         two_e_energy = ZERO
 
-				! Calculate two electron energy in column major order.
+	! Calculate two electron energy in column major order.
         do j = 1, N_elec
         
            do i = 1, N_elec
@@ -465,18 +464,18 @@ module plain_hartree_fock
         ! number of electrons and spinors as input. 
         
         ! Input
-        integer, intent(in) 																	:: N_elec     ! Number of electrons
-        integer, intent(in) 																	:: N_spinor   ! Number of spinors
+        integer, intent(in) 								:: N_elec     ! Number of electrons
+        integer, intent(in) 								:: N_spinor   ! Number of spinors
         
         ! Intermediate variables
         integer :: i, j                             
-        complex(8), PARAMETER 																:: ZERO = (0.D0, 0.D0)   ! Parameter ZERO
-        complex(8), PARAMETER 																:: TWO = (2.D0, 0.D0)    ! Parameter TWO
+        complex(8), PARAMETER 						                :: ZERO = (0.D0, 0.D0)   ! Parameter ZERO
+        complex(8), PARAMETER 							        :: TWO = (2.D0, 0.D0)    ! Parameter TWO
         
         ! Output
-        complex(8), dimension(N_spinor, N_spinor), intent(out) :: P_total   ! Density matrix (P)
+        complex(8), dimension(N_spinor, N_spinor), intent(out)                          :: P_total   ! Density matrix (P)
 
-				! Nullify density matrix
+	! Nullify density matrix
         P_total = ZERO 
         
         ! Fill initial density matrix diagonally with number of electrons (RHF)
@@ -495,17 +494,17 @@ module plain_hartree_fock
         ! expansion coefficients of the diagonalized Fock matrix as input.
 
         ! Input
-        integer, intent(in) 																		:: N_elec, N_spinor	  ! Number of electrons, spinors
-        complex(8), dimension(N_spinor, N_spinor), intent(in) 	:: C   								! Coeffient matrix from diagonal Fock matrix
+        integer, intent(in) 									:: N_elec, N_spinor	! Number of electrons, spinors
+        complex(8), dimension(N_spinor, N_spinor), intent(in) 	                                :: C           		! Coeffient matrix from diagonal Fock matrix
 
         ! Intermediate variables
         integer :: i, j, k	
-        complex(8), PARAMETER 																	:: ZERO = (0.D0, 0.D0)   ! Parameter ZERO
+        complex(8), PARAMETER 					            			:: ZERO = (0.D0, 0.D0)   ! Parameter ZERO
 	
         ! Output
-        complex(8), dimension(N_spinor, N_spinor), intent(out) :: P_total   ! Density matrix (P)
+        complex(8), dimension(N_spinor, N_spinor), intent(out)                                  :: P_total   ! Density matrix (P)
 
- 				! Nullify density matrix 
+        ! Nullify density matrix 
         P_total = ZERO               
 
         ! Construction of the RHF total density matrix in column major order with double precision.
