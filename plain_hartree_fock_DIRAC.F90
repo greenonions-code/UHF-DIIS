@@ -7,14 +7,14 @@ module plain_hartree_fock
 ! This file was part of a branch of the DIRAC relativistic computational software 
 ! program to practise and understand unrestricted Hartree-Fock in combination 
 ! with Fortran software development wihtin a team environment using GitLab.
-! As result of solving relativistic computational problems, tensors contained
-! complex parts, therefore sometime requiring a slightly different approach.
-!
+! As result of the relativistic nature of the computational program, tensors contained
+! complex parts and therefore requiring a slightly different approach. Compared to
+! normal Hartree-Fock.
 !---------------------------------------------------------------------------------
 ! Author: Melle de Groot, Master Student Chemistry, track Molecular Sciences.
 ! Course: Scientific Software Development with Fortran / VU University.
 !---------------------------------------------------------------------------------
-!
+! 
 ! Starting date of the project: March 1st 2019
 ! End date of the project: 	April 1st 2019
 !
