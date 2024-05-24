@@ -179,11 +179,11 @@ module plain_hartree_fock
         ! and the number of molecular spinors.  
 
         ! Input 
-        integer, intent(in)           		  :: scf_stepnumber, N_ELECTRONS, MAX_ITER, MAX_DIIS, N_spinor      
-        real(8), intent(in)             		:: hf_energy, vector_norm, SCF_TRESHOLD, one_el_energy, two_el_energy, V_NN
+        integer, intent(in)           		        :: scf_stepnumber, N_ELECTRONS, MAX_ITER, MAX_DIIS, N_spinor      
+        real(8), intent(in)             		:: hf_energy, vector_norm, SCF_TRESHOLD, one_el_energy, two_el_energy, V_NN ! V_NN = Nuclear Replusion
         logical, intent(in)             		:: converged
         character(8), intent(in)        		:: HF_TYPE, DIIS
-        real(8), allocatable, dimension(:) 	:: eigenvalues
+        real(8), allocatable, dimension(:) 	        :: eigenvalues
         
         ! Local variables 
         integer                         		:: i  
@@ -192,7 +192,7 @@ module plain_hartree_fock
         allocate ( eigenvalues (N_spinor) )     
 
 
-					! Print output when looping)
+	! Print output when looping)
           if ( scf_stepnumber .eq. 0 ) then
              print '(/,22x,a)' ,'======================================'
              print '(22x,a)'   ,'         HARTREE-FOCK PROGRAM         '          
@@ -247,18 +247,28 @@ module plain_hartree_fock
              print '(28x,a,/)', repeat ('-',16) 
              print '(24x,a,3x,a,10x,a)','NO','OCC','[a.u.]' 
 
-             do i=1, N_spinor
-                 if ( ( i .le. N_ELECTRONS ) .AND. (trim ( HF_TYPE ) .eq. 'UHF' ) )  then
-                    x = 1.D0
+             do i = 1, N_spinor
+                 
+		if ( ( i .le. N_ELECTRONS ) .AND. (trim ( HF_TYPE ) .eq. 'UHF' ) )  then
+                
+			x = 1.D0
+
                  elseif ( ( i .gt. N_ELECTRONS ) .AND. (trim ( HF_TYPE ) .eq. 'UHF' ) ) then
-                    x = 0.D0
-                 elseif ( ( i .le. N_ELECTRONS / 2 ) .AND. (trim ( HF_TYPE ) .eq. 'RHF' ) ) then
-                    x = 2.D0
-                 elseif ( ( i .gt. N_ELECTRONS / 2 ) .AND. (trim ( HF_TYPE ) .eq. 'RHF' ) ) then
-                    x = 0.D0
-                 endif      
-                 print '(21x,i4,3x,f6.4,6x,f9.6)',i,x, eigenvalues(i)
-             enddo
+
+			x = 0.D0
+                 
+		elseif ( ( i .le. N_ELECTRONS / 2 ) .AND. (trim ( HF_TYPE ) .eq. 'RHF' ) ) then
+                
+			x = 2.D0
+                 
+		elseif ( ( i .gt. N_ELECTRONS / 2 ) .AND. (trim ( HF_TYPE ) .eq. 'RHF' ) ) then
+                
+			x = 0.D0
+                endif      
+               
+		print '(21x,i4,3x,f6.4,6x,f9.6)',i,x, eigenvalues(i)
+             
+	     enddo
 
              print '(/,22x,a,/)'   ,'*** Terminating Normally ***'
 
@@ -289,11 +299,11 @@ module plain_hartree_fock
         integer      :: N_ELECTRONS, MAX_ITER, MAX_DIIS
         real (8)     :: SCF_TRESHOLD
 
-        open (9 , file = "input.txt", status = "unknown", form = "formatted")!, IOSTAT = ios, ERR = err  )
+        open (9 , file = "input.txt", status = "unknown", form = "formatted") !, IOSTAT = ios, ERR = err  )
         
         read (9 ,* )  HF_TYPE        ! Calculation type: RHF/UHF
         read (9 ,* )  N_ELECTRONS    ! Number of electrons
-        read (9 ,* )  MAX_ITER			 ! Maximum number of iterations
+        read (9 ,* )  MAX_ITER	     ! Maximum number of iterations
         read (9 ,* )  SCF_TRESHOLD   ! SCF Treshold value in Hartree 
         read (9 ,* )  DIIS, MAX_DIIS ! DIIS accelation and size of the DIIS space
              
@@ -626,14 +636,14 @@ module plain_hartree_fock
         integer, intent(in) 				        	  :: N_spinor   		! Number of spinors
         integer, intent(in) 						  :: scf_step   		! Current SCF step 
         complex(8), dimension(N_spinor*N_spinor), intent(in) 	          :: e_vector 			! 1D error array 
-        integer, intent(in) 				                  :: MAX_DIIS_SPACE ! Maximum size of the DIIS space
+        integer, intent(in) 				                  :: MAX_DIIS_SPACE             ! Maximum size of the DIIS space
 
         ! Intermediate
         integer                                                           :: i
-        complex(8), allocatable, dimension(:,:) 	       		  :: copy_e_list 	  ! Temp. copy of complex error list 
+        complex(8), allocatable, dimension(:,:) 	       		  :: copy_e_list 	   ! Temp. copy of complex error list 
         
         ! I/O
-        complex(8), allocatable, dimension(:,:), intent(inout) 	          :: e_list        	! Complex error list 
+        complex(8), allocatable, dimension(:,:), intent(inout) 	          :: e_list        	   ! Complex error list 
         
         ! If size DIIS space not met, allocate memory
         if ( scf_step .le. MAX_DIIS_SPACE ) then
@@ -690,7 +700,7 @@ module plain_hartree_fock
         complex(8), allocatable, dimension(:,:,:) 		        	:: copy_Fock_list      ! copy of list of Fock matrices 
         
         ! Output 
-        complex(8), allocatable, dimension(:,:,:), intent(inout) 	        :: Fock_list 		! List of extrapolated weighted Fock matrices 
+        complex(8), allocatable, dimension(:,:,:), intent(inout) 	        :: Fock_list 	       ! List of extrapolated weighted Fock matrices 
         
         ! if size DIIS space not met
         if ( scf_step .le. MAX_DIIS_SPACE ) then    
@@ -744,7 +754,7 @@ module plain_hartree_fock
         ! output
         complex(8), dimension(diis_space+1, diis_space+1), intent(out)    	:: B ! matrix B
 
-        ! Calculate B matrix in column major bij taking the dot products of the error lists
+        ! Calculate B matrix in column major bij taking the dot products of the error lists in column major order.
         do j = 1, diis_space
           
            do i = 1, diis_space 
