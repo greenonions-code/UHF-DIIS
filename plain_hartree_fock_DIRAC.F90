@@ -54,23 +54,23 @@ module plain_hartree_fock
          implicit none
 					
 	 ! One- and Two-electron Part
-         type(one_el_t)                                            :: oneint 	
-         complex(8)                                                :: twoint(:,:,:,:)
+         type(one_el_t)                                              :: oneint 				       		! one body part (h)
+         complex(8)                                                  :: twoint(:,:,:,:)					! two body part (G)
    
          ! Initialization 
-         complex(8), dimension(oneint%n_spinor, oneint%n_spinor)   :: P_total, F_matrix, C
-         complex(8), dimension(oneint%n_spinor*oneint%n_spinor)    :: DIIS_e_vector
-         complex(8), allocatable, dimension(:,:,:)                 :: DIIS_F_list ! List of Fock Matrices
-         complex(8), allocatable, dimension(:,:)                   :: DIIS_e_list, DIIS_B ! Error list and B matrix 
-         real(8), allocatable, dimension(:)                        :: DIIS_weights, eigenvalues
-         real(8)                                                   :: norm, two_el_energy, one_el_energy
-         integer                                                   :: scf_stepnumber = 0, DIIS_info
-         logical                                                   :: converged = .false. 
+         complex(8), dimension(oneint%n_spinor, oneint%n_spinor)     :: P_total, F_matrix, C                              ! Density, Fock and expansion coeficients
+         complex(8), dimension(oneint%n_spinor * oneint%n_spinor)    :: DIIS_e_vector			        	  ! DIIS error vector
+         complex(8), allocatable, dimension(:,:,:)                   :: DIIS_F_list                     		  ! DIIS list of extrapolated and weighted Fock matrices
+         complex(8), allocatable, dimension(:,:)                     :: DIIS_e_list, DIIS_B                     	  ! DIIS error vector list, DIIS B Matrix
+         real(8), allocatable, dimension(:)                          :: DIIS_weights, eigenvalues			  ! weights for DIIS algorithm
+         real(8)                                                     :: norm, two_el_energy, one_el_energy                ! vector norm, one- and two electron energies
+         integer                                                     :: scf_stepnumber = 0                                ! stepnumber during SCF iteration loop
+         logical                                                     :: converged = .false. 				  ! SCF convergence achieved
          
          ! Input reader variables
-         integer                                                   :: MAX_DIIS , MAX_ITER, N_ELECTRONS
-         real(8)                                                   :: SCF_TRESHOLD
-         character(8)                                              :: HF_TYPE, DIIS 
+         integer                                                     :: MAX_DIIS , MAX_ITER, N_ELECTRONS		  ! Maximum size of the DIIS space, number of iterations and electrons
+         real(8)                                                     :: SCF_TRESHOLD					  ! Self consistent field threshold in Hartree
+         character(8)                                                :: HF_TYPE, DIIS 					  ! Type of Hartree-Fock calculation (RHF or UHF), DIIS method (ON or OFF)
       
       
          ! Reads input
@@ -78,13 +78,13 @@ module plain_hartree_fock
 
          ! Logs output
          call logger (scf_stepnumber, (one_el_energy + two_el_energy + oneint%e_core) , norm, converged, HF_TYPE &
-                     ,N_ELECTRONS,MAX_ITER,SCF_TRESHOLD,DIIS,MAX_DIIS,one_el_energy, two_el_energy, &
-                     oneint%e_core, eigenvalues,oneint%n_spinor)
+                     ,N_ELECTRONS, MAX_ITER,SCF_TRESHOLD, DIIS, MAX_DIIS, one_el_energy, two_el_energy, &
+                     oneint%e_core, eigenvalues, oneint%n_spinor)
         
          ! Allocate memory for DIIS alorithm when requested.
          if ( trim ( DIIS ) .eq. 'DIIS-ON' ) then
-            allocate(DIIS_F_list(scf_stepnumber,oneint%n_spinor,oneint%n_spinor))
-            allocate(DIIS_e_list(scf_stepnumber,oneint%n_spinor*oneint%n_spinor)) 
+            allocate(DIIS_F_list(scf_stepnumber, oneint%n_spinor, oneint%n_spinor))
+            allocate(DIIS_e_list(scf_stepnumber, oneint%n_spinor * oneint%n_spinor)) 
          endif 
          
          ! SCF calculation
@@ -118,15 +118,15 @@ module plain_hartree_fock
 
             ! when DIIS is requested
             if  ( trim ( DIIS ) .eq. 'DIIS-ON' ) then
-               call DIIS_compute_fock (oneint%n_spinor, scf_stepnumber,P_total,MAX_DIIS &
+               call DIIS_compute_fock (oneint%n_spinor, scf_stepnumber ,P_total, MAX_DIIS &
                     , SCF_TRESHOLD, DIIS_e_list , DIIS_F_list, F_matrix, converged, norm) 
   
-  						! and convergence criteria are met
-               if ( converged .eqv. .true. ) then
+ 		! and convergence criteria are met
+                if ( converged .eqv. .true. ) then
                   
                   ! log the output 
-                  call logger (scf_stepnumber, (one_el_energy + two_el_energy + oneint%e_core) , norm, converged,HF_TYPE &
-                              , N_ELECTRONS,MAX_ITER,SCF_TRESHOLD,DIIS,MAX_DIIS, one_el_energy, two_el_energy, &
+                  call logger (scf_stepnumber, (one_el_energy + two_el_energy + oneint%e_core) , norm, converged, HF_TYPE &
+                              , N_ELECTRONS, MAX_ITER, SCF_TRESHOLD, DIIS, MAX_DIIS, one_el_energy, two_el_energy, &
                               oneint%e_core, eigenvalues, oneint%n_spinor)
                   exit
 
@@ -139,8 +139,8 @@ module plain_hartree_fock
                     , norm, DIIS_e_vector, converged)
                ! If convergence is achieved, log output
                if ( converged .eqv. .true. ) then
-                  call logger (scf_stepnumber, (one_el_energy + two_el_energy + oneint%e_core) , norm, converged,HF_TYPE &
-                              ,N_ELECTRONS,MAX_ITER,SCF_TRESHOLD,DIIS,MAX_DIIS, one_el_energy, two_el_energy, &
+                  call logger (scf_stepnumber, (one_el_energy + two_el_energy + oneint%e_core) , norm, converged ,HF_TYPE &
+                              ,N_ELECTRONS ,MAX_ITER ,SCF_TRESHOLD ,DIIS ,MAX_DIIS , one_el_energy, two_el_energy, &
                               oneint%e_core, eigenvalues, oneint%n_spinor)     
                   exit
 
@@ -148,9 +148,9 @@ module plain_hartree_fock
 
             endif
             
-            ! Log output at every SCF step number until maximum number of iterations.1. 
-            call logger (scf_stepnumber, (one_el_energy + two_el_energy + oneint%e_core) , norm, converged,HF_TYPE &
-            ,N_ELECTRONS,MAX_ITER,SCF_TRESHOLD,DIIS,MAX_DIIS, one_el_energy, two_el_energy, &
+            ! Log output at every SCF step number until maximum number of iterations 
+            call logger (scf_stepnumber, (one_el_energy + two_el_energy + oneint%e_core) , norm, converged ,HF_TYPE &
+            ,N_ELECTRONS ,MAX_ITER ,SCF_TRESHOLD ,DIIS ,MAX_DIIS , one_el_energy, two_el_energy, &
             oneint%e_core, eigenvalues, oneint%n_spinor)
           
           enddo
@@ -164,8 +164,7 @@ module plain_hartree_fock
          endif
 
         end subroutine hartree_fock_driver
-        
-        
+
  	!-----------------------------------------------------------------------------------------------------------------------------------------------------
  				
         subroutine logger (scf_stepnumber,hf_energy, vector_norm, converged, HF_TYPE, N_ELECTRONS, &
