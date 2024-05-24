@@ -1,5 +1,6 @@
 # UHF-DIIS
-Restricted and Unrestriced Hartree Fock Driver Including the DIIS Algorithm writting in Fortran as Part of a Master Course.
+Restricted and Unrestriced Hartree Fock Driver Including the DIIS Algorithm written in Fortran.
+The one- and two body parts (h) and (G) tensors, where provided by another part of the program. 
 
 Test calculation of UHF H2 molecule provided the following output as textfile:
 
