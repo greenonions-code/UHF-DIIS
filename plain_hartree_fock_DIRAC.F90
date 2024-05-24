@@ -1,6 +1,6 @@
 module plain_hartree_fock
 
-!-------------------------------------------------------------------------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------
 ! This module contains an in-core Hartree-Fock implementation using the talsh 
 ! library to provide the one and two electron integrals. 
 !
@@ -10,16 +10,15 @@ module plain_hartree_fock
 ! As result of solving relativistic computational problems, tensors contained
 ! complex parts, therefore sometime requiring a slightly different approach.
 !
-!
-!
-!------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------
 ! Author: Melle de Groot, Master Student Chemistry, track Molecular Sciences.
 ! Course: Scientific Software Development with Fortran / VU University.
-!------------------------------------------------------------------------------
-!------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------
+!
 ! Starting date of the project: March 1st 2019
 ! End date of the project: 	May   1st 2019
-!------------------------------------------------------------------------------
+!
+!---------------------------------------------------------------------------------
 
        use exacorr_datatypes
 
@@ -29,32 +28,32 @@ module plain_hartree_fock
         public hartree_fock_driver, diagonalize_complex_matrix
 
         contains
-        !-----------------------------------------------------------------------------------------------------------------------------------------------------
+        !----------------------------------------------------------------------------------------------------------------------------
         subroutine hartree_fock_driver(oneint,twoint)
-			! This Hartree Fock driver constructs the HF wavefunction based upon user input
-			! by calculation of the Fock and Density matrices until a self-consitent field is
-			! achieved. Upon request during input of a DIIS accelerated algorithm, provided 
-			! with a maximum size of the DIIS spacem during the SCF iterations, an 
-			! extrapolated list of weighted Fock matrices is contstructed to speed up convergence.
-			! The one- and two body tensors are already provided by the program. The user has to 
-			! specify the amount of electrons, their cartesian coordinates, the maximum number of 
-			! SCF iterators and the type of HF calculation: restricted or unrestricted. 
-		 	! All results will be logged to an output file which provides information with 
-			! respect to the type of calculation and whether the thresholds are met within set 
-			! boundaries. 
+	! This Hartree Fock driver constructs the HF wavefunction based upon user input
+	! by calculation of the Fock and Density matrices until a self-consitent field is
+	! achieved. Upon request during input of a DIIS accelerated algorithm, provided 
+	! with a maximum size of the DIIS spacem during the SCF iterations, an 
+	! extrapolated list of weighted Fock matrices is contstructed to speed up convergence.
+	! The one- and two body tensors are already provided by the program. The user has to 
+	! specify the amount of electrons, their cartesian coordinates, the maximum number of 
+	! SCF iterators and the type of HF calculation: restricted or unrestricted. 
+	! All results will be logged to an output file which provides information with 
+	! respect to the type of calculation and whether the thresholds are met within set 
+	! boundaries. 
 			  
-			! The program starts by allocating space for serveral tensors and will additionally
-			! call the user input reader, followed by a check of input and logging of results.
-			! Then when everything is in order, the SCF loop is started and altered by the fact
-			! whether the DIIS algorithm has been requested in the input file. 
-			! At the end all memory is deallocated and the used is provided with a formatted 
-			! output textfile. The example on GitHub presents an unrestricted calculation of H2
-			! with the DIIS algorithm being used. The one and two body parts have been provided 
-			! by another part of the DIRAC program. 
+	! The program starts by allocating space for serveral tensors and will additionally
+	! call the user input reader, followed by a check of input and logging of results.
+	! Then when everything is in order, the SCF loop is started and altered by the fact
+	! whether the DIIS algorithm has been requested in the input file. 
+	! At the end all memory is deallocated and the used is provided with a formatted 
+	! output textfile. The example on GitHub presents an unrestricted calculation of H2
+	! with the DIIS algorithm being used. The one and two body parts have been provided 
+	! by another part of the DIRAC program. 
         
          implicit none
 					
-				 ! One- and Two-electron Part
+	 ! One- and Two-electron Part
          type(one_el_t)                                            :: oneint 	
          complex(8)                                                :: twoint(:,:,:,:)
    
@@ -170,7 +169,7 @@ module plain_hartree_fock
  	!-----------------------------------------------------------------------------------------------------------------------------------------------------
  				
         subroutine logger (scf_stepnumber,hf_energy, vector_norm, converged, HF_TYPE, N_ELECTRONS, &
-                           MAX_ITER, SCF_TRESHOLD, DIIS, MAX_DIIS, one_el_energy, two_el_energy,V_NN, &
+                         MAX_ITER, SCF_TRESHOLD, DIIS, MAX_DIIS, one_el_energy, two_el_energy,V_NN, &
                            eigenvalues, N_spinor)
         
         ! This subroutine writes all the in- and output of the program to the DIRAC output file. The input parameters
