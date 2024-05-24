@@ -16,7 +16,7 @@ module plain_hartree_fock
 !---------------------------------------------------------------------------------
 !
 ! Starting date of the project: March 1st 2019
-! End date of the project: 	May   1st 2019
+! End date of the project: 	April 1st 2019
 !
 !---------------------------------------------------------------------------------
 
