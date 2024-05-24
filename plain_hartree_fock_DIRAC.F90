@@ -530,15 +530,15 @@ module plain_hartree_fock
         ! expansion coefficients of the diagonalized Fock matrix as input. 
         
         ! Input
-        integer, intent(in) 																		:: N_elec, N_spinor 			! Number of electrons, spinors 
-        complex(8), dimension(N_spinor, N_spinor), intent(in) 	:: C   										! Coeffient matrix from diagonal Fock matrix  
+        integer, intent(in) 						:: N_elec, N_spinor     ! Number of electrons, spinors 
+        complex(8), dimension(N_spinor, N_spinor), intent(in)   	:: C            	! Coeffient matrix from diagonal Fock matrix  
         
         ! Intermediate variables 
         integer :: i, j, k          
-        complex(8), PARAMETER 																	:: ZERO = (0.D0, 0.D0)   	! Parameter ZERO  
+        complex(8), PARAMETER 						:: ZERO = (0.D0, 0.D0)   	! Parameter ZERO  
         
         ! Output 
-        complex(8), dimension(N_spinor, N_spinor), intent(out) 	:: P_total   							! Density matrix (P) 
+        complex(8), dimension(N_spinor, N_spinor), intent(out)  	:: P_total ! Density matrix (P) 
        
         ! Nullify density matrix 
         P_total = ZERO 
@@ -569,8 +569,8 @@ module plain_hartree_fock
         ! In addition, the commutator matrix is reshaped into an 1D Error array for the DIIS algorithm.  
 
         ! Input 
-        integer, intent(in)                                  		:: N_spinor ! Number of spinors
-        real(8), intent(in)                                  		:: TRESHOLD ! Convergence treshold in Hartree 
+        integer, intent(in)                                  	:: N_spinor ! Number of spinors
+        real(8), intent(in)                                  	:: TRESHOLD ! Convergence treshold in Hartree 
         complex(8), dimension(N_spinor, N_spinor), intent(in) 	:: F        ! Fock matrix 
         complex(8), dimension(N_spinor, N_spinor), intent(in) 	:: P        ! Total density matrix (P, n-1)
                  
@@ -583,7 +583,7 @@ module plain_hartree_fock
         real(8), intent(out)                                  	:: vector_norm       ! |Error| or Frobenius norm
         logical, intent(out)                                  	:: converged         ! SCF converged or not
 
-				! Nullify convergence and Frobenius norm
+	! Nullify convergence and Frobenius norm
         converged = .false.
         vector_norm = 0.D0
         
@@ -625,17 +625,17 @@ module plain_hartree_fock
         ! This subroutine adds the constucted error vector (e_vector) to an error vector list (e_list). 
         
         ! Input 
-        integer, intent(in) 																	:: N_spinor   		! Number of spinors
-        integer, intent(in) 																	:: scf_step   		! Current SCF step 
-        complex(8), dimension(N_spinor*N_spinor), intent(in) 	:: e_vector 			! 1D error array 
-        integer, intent(in) 																	:: MAX_DIIS_SPACE ! Maximum size of the DIIS space
+        integer, intent(in) 				        	  :: N_spinor   		! Number of spinors
+        integer, intent(in) 						  :: scf_step   		! Current SCF step 
+        complex(8), dimension(N_spinor*N_spinor), intent(in) 	          :: e_vector 			! 1D error array 
+        integer, intent(in) 				                  :: MAX_DIIS_SPACE ! Maximum size of the DIIS space
 
         ! Intermediate
-        integer :: i
-        complex(8), allocatable, dimension(:,:) 								:: copy_e_list 	  ! Temp. copy of complex error list 
+        integer                                                           :: i
+        complex(8), allocatable, dimension(:,:) 	       		  :: copy_e_list 	  ! Temp. copy of complex error list 
         
         ! I/O
-        complex(8), allocatable, dimension(:,:), intent(inout) 	:: e_list        	! Complex error list 
+        complex(8), allocatable, dimension(:,:), intent(inout) 	          :: e_list        	! Complex error list 
         
         ! If size DIIS space not met, allocate memory
         if ( scf_step .le. MAX_DIIS_SPACE ) then
@@ -657,7 +657,7 @@ module plain_hartree_fock
               deallocate(e_list)
               call move_alloc(copy_e_list,e_list)
 				
-				! If size DIIS space is met:        
+        ! If size DIIS space is met:        
         ! Discard the oldest vector and add new one to the error list  
         elseif ( scf_step .gt. MAX_DIIS_SPACE ) then 
 
@@ -683,16 +683,16 @@ module plain_hartree_fock
         ! This subroutine adds the current Fock matrix to a list of Fock matrices.
         
         ! input 
-        integer, intent(in) 																			:: N_spinor, scf_step ! Number spinors and scf stepnumber
-        complex(8), dimension(N_spinor,N_spinor), intent(in) 			:: F 									! Current Fock matrix 
+        integer, intent(in) 							:: N_spinor, scf_step ! Number spinors and scf stepnumber
+        complex(8), dimension(N_spinor,N_spinor), intent(in) 			:: F                  ! Current Fock matrix 
         integer, intent(in) :: MAX_DIIS_SPACE 
 
         ! Intermediate
-        integer 																									:: i
-        complex(8), allocatable, dimension(:,:,:) 								:: copy_Fock_list	 		! copy of list of Fock matrices 
+        integer 			 					:: i
+        complex(8), allocatable, dimension(:,:,:) 		        	:: copy_Fock_list      ! copy of list of Fock matrices 
         
         ! Output 
-        complex(8), allocatable, dimension(:,:,:), intent(inout) 	:: Fock_list 					! List of Fock matrices 
+        complex(8), allocatable, dimension(:,:,:), intent(inout) 	        :: Fock_list 		! List of extrapolated weighted Fock matrices 
         
         ! if size DIIS space not met
         if ( scf_step .le. MAX_DIIS_SPACE ) then    
@@ -701,8 +701,10 @@ module plain_hartree_fock
               allocate(copy_Fock_list(scf_step,N_spinor,N_spinor))  
            
               ! copy the old Fock list into temporary
-              do i=1, scf_step - 1
+              do i = 1, scf_step - 1
+
                  copy_Fock_list(i,:,:) = Fock_list (i,:,:)  
+
               enddo 
            
               ! Copy the new Fock matrix into the temp. Fock list 
@@ -735,30 +737,31 @@ module plain_hartree_fock
         ! This subroutine constructs the B matrix of the DIIS algorithm.
 
         ! input
-        integer, intent(in)                                             		:: N_spinor , diis_space
+        integer, intent(in)                                             	:: N_spinor , diis_space
         complex(8), dimension(diis_space, N_spinor * N_spinor), intent(in) 	:: e_list   
 
         ! intermediate 
-        integer 																														:: i, j
+        integer 								:: i, j
 
         ! output
         complex(8), dimension(diis_space+1, diis_space+1), intent(out)    	:: B ! matrix B
 
-				! Calculate B matrix in column major bij taking the dot products of the error lists
+        ! Calculate B matrix in column major bij taking the dot products of the error lists
         do j = 1, diis_space
           
            do i = 1, diis_space 
           
-              B(i ,j ) = dot_product( e_list (i , : ) , e_list( j , : ) ) 			! check if this is correct  
+              B (i ,j ) = dot_product( e_list (i , : ) , e_list( j , : ) )          ! check if this is correct  
           
            enddo 
        
         enddo
         
         ! Fill rest of matrix B 
-        B (: , diis_space + 1 ) 						 = -1.D0
+
+        B (: , diis_space + 1 ) 					 = -1.D0
         B  (diis_space + 1 ,: )   					 = -1.D0
-        B (diis_space + 1 ,diis_space + 1 )  = 0.0D0
+        B (diis_space + 1 ,diis_space + 1 )                              = 0.0D0
 
         end subroutine DIIS_construct_B 
 
@@ -766,29 +769,29 @@ module plain_hartree_fock
         subroutine DIIS_compute_weights (diis_space,matrix_B,weights,info) 
         
         ! input
-        integer, intent(in)                                          				:: diis_space  ! number of DIIS vectors
+        integer, intent(in)                                          		:: diis_space  ! number of DIIS vectors
         complex(8), dimension(diis_space + 1 ,diis_space + 1 ), intent(in) 	:: matrix_B  ! Matrix B        
         
         ! intermediate
-        real(8), allocatable, dimension(:,:)                         				:: reordered_RHS ! B * SOL = RHS
-        real(8), allocatable, dimension(:,:,:)                      			  :: reordered_B
-        real(8), parameter                                          			  :: ZERO = (0.D0), MINUS_ONE = (-1.D0)
-        integer, dimension(diis_space+1)                             				:: IPIV ! pivot indices
+        real(8), allocatable, dimension(:,:)                         		:: reordered_RHS ! B * SOL = RHS
+        real(8), allocatable, dimension(:,:,:)                      	        :: reordered_B
+        real(8), parameter                                          	        :: ZERO = (0.D0), MINUS_ONE = (-1.D0)
+        integer, dimension(diis_space+1)                             		:: IPIV ! pivot indices
 
         ! output
-        real(8), dimension(diis_space), intent(out)                 			  :: weights ! weights 
-        integer, intent(out)                                         				:: info ! DGESV
+        real(8), dimension(diis_space), intent(out)                 		:: weights ! weights 
+        integer, intent(out)                                         	        :: info ! DGESV
         
         allocate (reordered_RHS(diis_space+1,2))
         allocate (reordered_B(diis_space+1,diis_space+1,2))
 
         ! Fill right hand side of linear system with real values
-        reordered_RHS(: ,: ) 									= ZERO 
-        reordered_RHS(diis_space + 1 ,1 ) 	  = MINUS_ONE ! real part of right-hand-side = -1
+        reordered_RHS(: ,: )              = ZERO 
+        reordered_RHS(diis_space + 1 ,1 ) = MINUS_ONE  ! real part of right-hand-side = -1
 
         ! Reorder with DP 
-        reordered_B(: ,: ,1 ) 								= REAL(matrix_B,8)
-        reordered_B(: ,: ,2 ) 								= DIMAG(matrix_B)  ! complex part not used
+        reordered_B(: ,: ,1 )             = REAL(matrix_B,8)
+        reordered_B(: ,: ,2 )             = DIMAG(matrix_B)  ! complex part not used
 
         ! Solve linear system: B * solution = RHS (using only the real parts and RHS is replaced by sol).  
         call DGESV (diis_space + 1 ,1 ,reordered_B(: ,: ,1 ) ,diis_space + 1 ,IPIV ,reordered_RHS(: ,1 ),diis_space + 1 ,info )
@@ -803,14 +806,12 @@ module plain_hartree_fock
         end subroutine DIIS_compute_weights
 
         !----------------------------------------------------------------------------------------------------------------------------------------------------
-        subroutine DIIS_compute_fock (N_spinor,DIIS_space,P,MAX_DIIS_SPACE,TRESHOLD,e_list,Fock_list,F,&
-                                      converged,vector_norm)
-        
+        subroutine DIIS_compute_fock (N_spinor,DIIS_space,P,MAX_DIIS_SPACE,TRESHOLD,e_list,Fock_list,F, converged,vector_norm)
         ! This subroutine construct an extrapolated Fock matrix using the DIIS algorithm.
  
         ! input 
-        integer, intent(in)                                		   	:: N_spinor 						! Size of MOs and DIIS spaces
-        complex(8), dimension(N_spinor, N_spinor), intent (in) 		:: P    						    ! Density matrix 
+        integer, intent(in)                                		:: N_spinor		! Size of MOs and DIIS spaces
+        complex(8), dimension(N_spinor, N_spinor), intent (in) 		:: P    		! Density matrix 
         integer, intent (in)                                  		:: MAX_DIIS_SPACE       ! maximum number of DIIS vectors
         real(8), intent (in)                                  		:: TRESHOLD             ! treshold value for convergence in Hartree  
 
@@ -823,9 +824,9 @@ module plain_hartree_fock
         logical                                               		:: converged
         
         ! i/o 
-        complex(8), allocatable, dimension(:,:), intent(inout)    :: e_list               ! error list  
-        complex(8), allocatable, dimension(:,:,:), intent(inout)  :: Fock_list            ! list of Fock matrices 
-        complex(8), dimension(N_spinor, N_spinor), intent(inout)  :: F                    ! Fock matrix
+        complex(8), allocatable, dimension(:,:), intent(inout)    	:: e_list               ! error list  
+        complex(8), allocatable, dimension(:,:,:), intent(inout)  	:: Fock_list            ! list of extrapolated and weighted Fock matrices 
+        complex(8), dimension(N_spinor, N_spinor), intent(inout)  	:: F                    ! Fock matrix
         integer, intent(inout) :: DIIS_space
         
         ! Allocate arrays    
@@ -887,15 +888,15 @@ module plain_hartree_fock
 !       format, with the real/imaginary dimension as the last instead
 !       of the first.
 
-        complex(8), intent(in) :: the_matrix(:,:)
-        real(8), allocatable :: reordered_matrix(:,:,:)
-        real(8), allocatable :: eigenvectors(:,:,:)
-        real(8), allocatable, intent(out) :: eigenvalues(:)
-        complex(8), intent(out) :: C(:,:)
+        complex(8), intent(in) 			:: the_matrix(:,:)
+        real(8), allocatable 			:: reordered_matrix(:,:,:)
+        real(8), allocatable 			:: eigenvectors(:,:,:)
+        real(8), allocatable, intent(out) 	:: eigenvalues(:)
+        complex(8), intent(out) 		:: C(:,:)
        
-        integer ierr, i, n
+        integer 				:: ierr, i, n
         
-        n = size(the_matrix,1)
+        n = size(the_matrix ,1 )
 
         if (size(the_matrix,2) /= n) call quit ('Matrix has to be square')
 
@@ -923,14 +924,3 @@ module plain_hartree_fock
         end subroutine diagonalize_complex_matrix
     
 end module plain_hartree_fock
-
-
-
-
-
-
-
-
-
-
-
