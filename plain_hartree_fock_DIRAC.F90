@@ -333,7 +333,7 @@ module plain_hartree_fock
         real(8), intent(out) 							        :: one_e_energy   ! One electron energy
         real(8), intent(out)						                :: two_e_energy   ! Two electron energy
 
-        ! Nullify G_matrix
+        ! nullify G_matrix
         G_matrix = ZERO
 
         ! Contraction of the G-tensor with the total density matrix (P) in column-major order.
@@ -358,7 +358,7 @@ module plain_hartree_fock
         ! Formation of the Fock matrix by matrix addititon of contracted 2nd order G-tensor and one body part
         F_matrix = h_matrix + G_matrix
 
-        ! Nullify tne electron energy
+        ! nullify tne electron energy
         one_e_energy = ZERO
 
         ! Calculate one electron energy in column-major order.
@@ -372,7 +372,7 @@ module plain_hartree_fock
         
         enddo
 
-        ! Nullify two electron energy
+        ! nullify two electron energy
         two_e_energy = ZERO
 
         ! Calculate two electron energy in column major order.
@@ -410,7 +410,7 @@ module plain_hartree_fock
         real(8), intent(out) 								:: one_e_energy ! One electron energy
         real(8), intent(out) 						                :: two_e_energy ! Two electron energy  
 
-        ! Nullify G_matrix
+        ! nullify G_matrix
         G_matrix = ZERO
         
         ! Contraction of the 4rh order G-tensor with the total density matrix (P) in column-major order.
@@ -435,7 +435,7 @@ module plain_hartree_fock
         ! Formation of the Fock matrix by matrix addititon of contracted 2nd order G-tensor and one body part
         F_matrix = h_matrix + G_matrix     
         
-        ! Nullify one electron energy
+        ! nullify one electron energy
         one_e_energy = ZERO
 
 	! Calculate one electron energy in column major order.
@@ -449,7 +449,7 @@ module plain_hartree_fock
         
         enddo
 
-        ! Nullift two electron energy 
+        ! nullify two electron energy 
         two_e_energy = ZERO
 
 	! Calculate two electron energy in column major order.
@@ -483,7 +483,7 @@ module plain_hartree_fock
         ! Output
         complex(8), dimension(N_spinor, N_spinor), intent(out)                          :: P_total   ! Density matrix (P)
 
-	! Nullify density matrix
+	! nullify density matrix
         P_total = ZERO 
         
         ! Fill initial density matrix diagonally with number of electrons (RHF)
@@ -512,7 +512,7 @@ module plain_hartree_fock
         ! Output
         complex(8), dimension(N_spinor, N_spinor), intent(out)                                  :: P_total   ! Density matrix (P)
 
-        ! Nullify density matrix 
+        ! nullify density matrix 
         P_total = ZERO               
 
         ! Construction of the RHF total density matrix in column major order with double precision.
@@ -548,7 +548,7 @@ module plain_hartree_fock
         ! Output 
         complex(8), dimension(N_spinor, N_spinor), intent(out)  	:: P_total ! Density matrix (P) 
        
-        ! Nullify density matrix 
+        ! nullify density matrix 
         P_total = ZERO 
         
         ! Construction of the UHF density matrix in column major order with double precision. 
@@ -591,7 +591,7 @@ module plain_hartree_fock
         real(8), intent(out)                                  	:: vector_norm       ! |Error| or Frobenius norm
         logical, intent(out)                                  	:: converged         ! SCF converged or not
 
-	! Nullify convergence and Frobenius norm
+	! nullify convergence and Frobenius norm
         converged = .false.
         vector_norm = 0.D0
         
@@ -871,7 +871,7 @@ module plain_hartree_fock
         ! Compute the weights
         call DIIS_compute_weights(DIIS_space, matrix_B, weights, info) 
         
-        ! Nullify Fock Matrix          
+        ! nullify Fock Matrix          
         F = (0.D0, 0.D0)
         
         ! Generate weighted list of Fock matrices according to max DIIS space set
