@@ -1,7 +1,7 @@
 # UHF-DIIS
 Restricted and Unrestriced Hartree Fock Driver Including the DIIS Algorithm
 
-Test calculation of UHF H2 molecule.
+Test calculation of UHF H2 molecule provided the following output as textfile:
 
 
 
